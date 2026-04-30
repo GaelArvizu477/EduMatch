@@ -272,6 +272,7 @@ function mostrarRamas(ramas) {
   // Create radar chart
   const labels = Object.keys(resultados);
   const data = Object.values(resultados);
+  const dataNormalizada = data.map((valor) => ((valor + 12) / 24) * 100);
 
   const { backgroundColor, borderColor } = obtenerColoresChart();
 
@@ -286,7 +287,7 @@ function mostrarRamas(ramas) {
       datasets: [
         {
           label: "Perfil",
-          data: data,
+          data: dataNormalizada,
           backgroundColor: backgroundColor,
           borderColor: borderColor,
         },
@@ -296,11 +297,28 @@ function mostrarRamas(ramas) {
       responsive: false,
       scales: {
         r: {
+          min: 0,
+          max: 100,
+          stepSize: 20,
           ticks: {
             display: false,
           },
         },
       },
+      plugins: {
+        legend: {
+          display: false,
+        },
+        tooltip: {
+          callbacks: {
+            label: function (context) {
+              const index = context.dataIndex;
+          const valorReal = data[index];
+          return `${labels[index]}: ${valorReal}`;
+            }
+          }
+        }
+      } 
     },
   });
 

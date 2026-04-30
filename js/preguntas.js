@@ -1,12 +1,12 @@
-// Este arreglo se usa para testear
+/* Este arreglo se usa para testear
 const preguntas = [
   // REALISTA
   { texto: "¿Te gustaría diseñar los planos de una casa o estructura?", area: "realista" },
   { texto: "¿Te interesa el funcionamiento de circuitos electrónicos o motores?", area: "realista" }
   ]
-//
+*/
 
-/* Arreglo de preguntas
+// Arreglo de preguntas
 const preguntas = [
   // REALISTA
   { texto: "¿Te gustaría diseñar los planos de una casa o estructura?", area: "realista" },
@@ -56,7 +56,7 @@ const preguntas = [
   { texto: "¿Eres hábil para clasificar y catalogar objetos de forma sistemática?", area: "convencional" },
   { texto: "¿Te sientes cómodo siguiendo procedimientos paso a paso sin desviarte?", area: "convencional" }
 ];
-*/
+//
 
 const riasecRamas = {
   realista: ["ingenieria", "tecnologia"],
