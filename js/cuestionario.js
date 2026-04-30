@@ -146,7 +146,7 @@ function crearBotones(bloque) {
   const siguiente = document.createElement("button");
   siguiente.type = "button";
   siguiente.className =
-    "text-white dark:text-black bg-blue-800 dark:bg-blue-400 hover:bg-blue-900 dark:hover:bg-blue-300 focus:ring-4 focus:ring-blue-300 dark:focus:ring-blue-600 font-medium rounded-full text-sm px-5 py-2.5 shadow-md transition-all duration-200";
+    "font-semibold text-white dark:text-black bg-blue-800 dark:bg-blue-400 hover:bg-blue-900 dark:hover:bg-blue-300 focus:ring-4 focus:ring-blue-300 dark:focus:ring-blue-600 font-medium rounded-full text-sm px-5 py-2.5 shadow-md transition-all duration-200";
   siguiente.innerText =
     preguntaActual === preguntas.length - 1 ? "Finalizar" : "Siguiente";
 
@@ -178,15 +178,20 @@ function mostrarPregunta() {
   const bloque = document.createElement("div");
   bloque.id = "bloque";
   bloque.className =
-    "w-full max-w-xl min-h-[436px] mx-auto mt-6 flex flex-col bg-gray-100 dark:bg-[#1F2229] p-6 border border-gray-300 dark:border-gray-800 rounded-2xl shadow-2xl dark:shadow-gray-900 text-center";
+    "w-full max-w-xl min-h-[460px] mx-auto mt-6 flex flex-col bg-gray-100 dark:bg-[#1F2229] p-6 border border-gray-300 dark:border-gray-800 rounded-2xl shadow-2xl dark:shadow-gray-900 text-center";
   contenedor.appendChild(bloque);
 
   crearBarraProgreso(bloque);
 
+  const contenedorPregunta = document.createElement("div");
+  contenedorPregunta.className = "mb-6 min-h-[60px]";
+
+  bloque.appendChild(contenedorPregunta);
   const texto = document.createElement("h5");
   texto.innerText = p.texto;
-  texto.className = "mb-6 text-base text-gray-900 dark:text-white sm:text-lg";
-  bloque.appendChild(texto);
+  texto.className = "text-base text-gray-900 dark:text-white sm:text-lg";
+  bloque.appendChild(contenedorPregunta);
+  contenedorPregunta.appendChild(texto);
 
   crearOpciones(bloque);
   crearBotones(bloque);
@@ -251,7 +256,7 @@ function mostrarRamas(ramas) {
 
   const contenedor = document.createElement("div");
   contenedor.className =
-    "w-full max-w-2xl min-h-[436px] mx-auto mt-8 mb-10 flex flex-col bg-gray-100 dark:bg-[#1F2229] p-6 border border-gray-300 dark:border-gray-700 rounded-2xl shadow-2xl dark:shadow-gray-900 text-center";
+    "w-full max-w-2xl min-h-[460px] mx-auto mt-8 mb-10 flex flex-col bg-gray-100 dark:bg-[#1F2229] p-6 border border-gray-300 dark:border-gray-700 rounded-2xl shadow-2xl dark:shadow-gray-900 text-center";
 
   // Title
   const title = document.createElement("h2");
