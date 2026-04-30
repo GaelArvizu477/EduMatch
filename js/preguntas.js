@@ -1,10 +1,12 @@
-// Arreglo de preguntas
+// Este arreglo se usa para testear
 const preguntas = [
   // REALISTA
   { texto: "¿Te gustaría diseñar los planos de una casa o estructura?", area: "realista" },
   { texto: "¿Te interesa el funcionamiento de circuitos electrónicos o motores?", area: "realista" }
-]
-/*
+  ]
+//
+
+/* Arreglo de preguntas
 const preguntas = [
   // REALISTA
   { texto: "¿Te gustaría diseñar los planos de una casa o estructura?", area: "realista" },

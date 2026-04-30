@@ -5,48 +5,54 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>EduMatch - Cuestionario</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
     />
-  </head>
-  <body>
-    <div class="fixed inset-0 z-0 opacity-30 pointer-events-none">
-      <svg
-        class="w-screen h-screen"
-        preserveAspectRatio="none"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <defs>
-          <pattern
-            id="bg_pattern"
-            width="60"
-            height="60"
-            patternUnits="userSpaceOnUse"
-          >
-            <circle cx="10" cy="10" r="2" fill="#1E429F"></circle>
-            <circle cx="30" cy="30" r="2" fill="#1E429F"></circle>
-          </pattern>
-        </defs>
+</head>
+<body class="bg-gray-100 dark:bg-[#1B1B1D]">
+  <!-- Patron de fondo -->
+   <div
+    class="fixed inset-0 z-0 opacity-30 pointer-events-none text-blue-400 dark:text-[#282C36]"
+  >
+    <svg class="w-screen h-screen" preserveAspectRatio="none">
+      <defs>
+        <pattern
+          id="bg_pattern"
+          width="60"
+          height="60"
+          patternUnits="userSpaceOnUse"
+        >
+          <circle cx="10" cy="10" r="2" fill="currentColor"></circle>
+          <circle cx="30" cy="30" r="2" fill="currentColor"></circle>
+        </pattern>
+      </defs>
 
-        <rect width="100%" height="100%" fill="#E7E7E7"></rect>
-        <rect width="100%" height="100%" fill="url(#bg_pattern)"></rect>
-      </svg>
-    </div>
+      <rect
+        width="100%"
+        height="100%"
+        class="fill-gray-200 dark:fill-[#121214]"
+      ></rect>
 
-    <header class="relative">
+      <rect width="100%" height="100%" fill="url(#bg_pattern)"></rect>
+    </svg>
+  </div>
+
+  <header class="relative sticky top-0 z-20">
       <nav
-        class="bg-bg-gray-100/50 backdrop-blur-xs sticky top-0 w-full z-20 start-0 border-b border-default relative"
+        class="bg-gray-100 dark:bg-[#1F2229] backdrop-blur-xs w-full start-0 border-b border-gray-300 dark:border-gray-800 relative dark:text-white"
       >
         <div
           class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-3"
         >
           <a
             href="index.html"
-            class="flex items-center space-x-3 rtl:space-x-reverse hover:text-blue-900 hover:scale-90 transition-all"
+            class="flex items-center space-x-3 rtl:space-x-reverse hover:text-blue-900 dark:hover:text-blue-400 hover:scale-90 transition-all"
           >
             <svg
-              class="w-14 h-14 text-blue-800"
+              class="w-14 h-14 text-blue-800 dark:text-blue-400"
               viewBox="60 70 100 100"
               xmlns="http://www.w3.org/2000/svg"
               fill="currentColor"
@@ -58,18 +64,53 @@
             </svg>
             <span
               class="self-center text-2xl text-heading font-semibold whitespace-nowrap"
-            >EduMatch
+              >EduMatch
             </span>
           </a>
           <div
-            class="flex md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse"
+            class="flex md:order-2 md:space-x-0 rtl:space-x-reverse items-center"
           >
-            <button
-              type="button"
-              class="text-white bg-blue-800 hover:bg-blue-900 focus:ring-4 focus:ring-blue-300 font-medium rounded-full text-sm px-5 py-2.5 shadow-md transition-all duration-200"
-            >
-              Comienza ahora
-            </button>
+            <!-- Boton para alternar entre temas -->
+            <div class="flex items-center gap-3">
+              <button
+                id="theme-toggle"
+                type="button"
+                class="text-gray-500 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700 focus:ring-gray-200 dark:focus:ring-gray-700 rounded-full text-sm p-2.5"
+              >
+                <!-- Icono sol -->
+                <svg
+                  id="theme-toggle-dark-icon"
+                  class="hidden w-5 h-5"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z"
+                    fill-rule="evenodd"
+                    clip-rule="evenodd"
+                  ></path>
+                </svg>
+                <!-- Icono luna -->
+                <svg
+                  id="theme-toggle-light-icon"
+                  class="hidden w-5 h-5"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"
+                  ></path>
+                </svg>
+              </button>
+
+              <button
+                type="button"
+                class="text-white bg-blue-800 dark:bg-blue-400 hover:bg-blue-900 dark:hover:bg-blue-300 focus:ring-4 focus:ring-blue-300 dark:focus:ring-blue-600 font-medium rounded-full text-sm px-5 py-2.5 shadow-md transition-all duration-200 dark:text-black"
+              >
+                Comienza ahora
+              </button>
+            </div>
+
             <button
               data-collapse-toggle="navbar-sticky"
               type="button"
@@ -106,7 +147,7 @@
               <li>
                 <a
                   href="index.html"
-                  class="block py-2 px-3 text-white bg-brand rounded-sm md:bg-transparent md:text-black md:p-0"
+                  class="block py-2 px-3 dark:text-white bg-brand rounded-sm md:bg-transparent md:p-0 hover:underline"
                   aria-current="page"
                   >Inicio</a
                 >
@@ -114,21 +155,21 @@
               <li>
                 <a
                   href="#"
-                  class="block py-2 px-3 text-heading rounded hover:bg-neutral-tertiary md:hover:bg-transparent md:border-0 md:hover:text-fg-brand md:p-0 md:dark:hover:bg-transparent"
+                  class="block py-2 px-3 text-heading rounded hover:bg-neutral-tertiary md:hover:bg-transparent md:border-0 md:hover:text-fg-brand md:p-0 md:dark:hover:bg-transparent hover:underline"
                   >About</a
                 >
               </li>
               <li>
                 <a
                   href="#"
-                  class="block py-2 px-3 text-heading rounded hover:bg-neutral-tertiary md:hover:bg-transparent md:border-0 md:hover:text-fg-brand md:p-0 md:dark:hover:bg-transparent"
+                  class="block py-2 px-3 text-heading rounded hover:bg-neutral-tertiary md:hover:bg-transparent md:border-0 md:hover:text-fg-brand md:p-0 md:dark:hover:bg-transparent hover:underline"
                   >Services</a
                 >
               </li>
               <li>
                 <a
                   href="#"
-                  class="block py-2 px-3 text-heading rounded hover:bg-neutral-tertiary md:hover:bg-transparent md:border-0 md:hover:text-fg-brand md:p-0 md:dark:hover:bg-transparent"
+                  class="block py-2 px-3 text-heading rounded hover:bg-neutral-tertiary md:hover:bg-transparent md:border-0 md:hover:text-fg-brand md:p-0 md:dark:hover:bg-transparent hover:underline"
                   >Contact</a
                 >
               </li>
@@ -147,5 +188,54 @@
     <footer></footer>
     <script src="js/preguntas.js"></script>
     <script src="js/cuestionario.js"></script>
+    <script>
+      tailwind.config = {
+        darkMode: "class",
+      };
+    </script>
+    <script>
+      // Theme toggle functionality
+      const themeToggleBtn = document.getElementById("theme-toggle");
+      const darkIcon = document.getElementById("theme-toggle-dark-icon");
+      const lightIcon = document.getElementById("theme-toggle-light-icon");
+
+      // Check for saved theme preference or system preference
+      if (
+        localStorage.getItem("color-theme") === "dark" ||
+        (!("color-theme" in localStorage) &&
+          window.matchMedia("(prefers-color-scheme: dark)").matches)
+      ) {
+        document.documentElement.classList.add("dark");
+        darkIcon.classList.remove("hidden");
+      } else {
+        document.documentElement.classList.remove("dark");
+        lightIcon.classList.remove("hidden");
+      }
+
+      themeToggleBtn.addEventListener("click", function () {
+        // Toggle icons
+        darkIcon.classList.toggle("hidden");
+        lightIcon.classList.toggle("hidden");
+
+        // Toggle theme
+        if (localStorage.getItem("color-theme")) {
+          if (localStorage.getItem("color-theme") === "light") {
+            document.documentElement.classList.add("dark");
+            localStorage.setItem("color-theme", "dark");
+          } else {
+            document.documentElement.classList.remove("dark");
+            localStorage.setItem("color-theme", "light");
+          }
+        } else {
+          if (document.documentElement.classList.contains("dark")) {
+            document.documentElement.classList.remove("dark");
+            localStorage.setItem("color-theme", "light");
+          } else {
+            document.documentElement.classList.add("dark");
+            localStorage.setItem("color-theme", "dark");
+          }
+        }
+      });
+    </script>
   </body>
 </html>
