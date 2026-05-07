@@ -188,7 +188,19 @@ function crearBotones(bloque) {
       `input[name="pregunta${preguntaActual}"]:checked`,
     );
     if (!respuesta) {
-      alert("Debes seleccionar una opción antes de poder avanzar");
+      Swal.fire({
+        toast: true,
+        position: "bottom-right",
+        icon: "warning",
+        title: "Debes responder la pregunta antes de continuar.",
+        showConfirmButton: false,
+        timer: 3000,
+        timerProgressBar: true,
+
+        customClass: {
+          popup: "rounded-2xl dark:bg-[#1F2229] dark:text-white",
+        },
+      });
       return;
     }
     respuestas[preguntaActual] = parseInt(respuesta.value);
