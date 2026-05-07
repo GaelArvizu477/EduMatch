@@ -9,14 +9,47 @@ function obtenerColoresChart() {
   return {
     backgroundColor: isDark ? "#1E429F33" : "#76A9FA33",
     borderColor: isDark ? "#76A9FA" : "#1E429F",
+
+    gridColor: isDark ? "#9ea5b11a" : "#37415133",
+    angleLineColor: isDark ? "#9ea5b11a" : "#37415133",
+    labelColor: isDark ? "#D1D5DB" : "#374151",
   };
+}
+
+// Funcion para dibujar el canvas en modo claro en el PDF
+function aplicarModoClaroChart() {
+  if (!perfilChart) return;
+
+  // Colores tipo light mode (forzados)
+  perfilChart.options.scales.r.grid.color = "#37415133";
+  perfilChart.options.scales.r.angleLines.color = "#37415133";
+  perfilChart.options.scales.r.pointLabels.color = "#374151";
+
+  perfilChart.data.datasets[0].backgroundColor = "#76A9FA33";
+  perfilChart.data.datasets[0].borderColor = "#1E429F";
+
+  perfilChart.update("none");
 }
 
 function actualizarPaletaChart() {
   if (!perfilChart) return;
-  const { backgroundColor, borderColor } = obtenerColoresChart();
+  const {
+    backgroundColor,
+    borderColor,
+    gridColor,
+    angleLineColor,
+    labelColor,
+  } = obtenerColoresChart();
+
+  // Actualizar colores de datasets
   perfilChart.data.datasets[0].backgroundColor = backgroundColor;
   perfilChart.data.datasets[0].borderColor = borderColor;
+
+  // Actualizar colores de grid, angleLines y pointLabels
+  perfilChart.options.scales.r.grid.color = gridColor;
+  perfilChart.options.scales.r.angleLines.color = angleLineColor;
+  perfilChart.options.scales.r.pointLabels.color = labelColor;
+
   perfilChart.update();
 }
 
@@ -65,7 +98,7 @@ function crearBarraProgreso(bloque) {
   const barra = document.createElement("div");
   barra.className =
     "bg-blue-800 dark:bg-blue-400 h-2 rounded-full transition-all duration-500 ease-in-out";
-  const porcentaje = ((preguntaActual + 1) / preguntas.length) * 100;
+  const porcentaje = (preguntaActual / preguntas.length) * 100;
   barra.style.width = porcentaje + "%";
 
   const indicePregunta = document.createElement("p");
@@ -199,8 +232,7 @@ function mostrarPregunta() {
 
 function mostrarResultados() {
   const resultados = calcularResultados();
-  const ramas = obtenerRamas(resultados);
-  mostrarRamas(ramas);
+  mostrarPerfiles(resultados);
 }
 
 // Calcular resultados
@@ -224,37 +256,15 @@ function calcularResultados() {
   return resultados;
 }
 
-// Obtener Ramas de carreras
-function obtenerRamas(resultados) {
-  const top3 = Object.entries(resultados)
-    .sort((a, b) => b[1] - a[1])
-    .slice(0, 3)
-    .map(([key]) => key.toLowerCase());
-
-  const conteo = {};
-  top3.forEach((tipo) => {
-    riasecRamas[tipo].forEach((rama) => {
-      conteo[rama] = (conteo[rama] || 0) + 1;
-    });
-  });
-
-  const ramasOrdenadas = Object.entries(conteo)
-    .sort((a, b) => b[1] - a[1])
-    .map(([key]) => key);
-
-  return ramasOrdenadas.slice(0, 3);
-}
-
-// Mostrar resultados en pantalla
-function mostrarRamas(ramas) {
-  const resultados = calcularResultados(); // Get the scores again
-
+//* Mostrar resultados en pantalla
+function mostrarPerfiles(resultados) {
   // Limpiar cuestionario
   document.getElementById("cuestionario").innerHTML = "";
   const resultadosDiv = document.getElementById("resultados");
   resultadosDiv.innerHTML = "";
 
   const contenedor = document.createElement("div");
+  contenedor.id = "paginaPDF";
   contenedor.className =
     "w-full max-w-2xl min-h-[460px] mx-auto mt-8 mb-10 flex flex-col bg-gray-100 dark:bg-[#1F2229] p-6 border border-gray-300 dark:border-gray-700 rounded-2xl shadow-2xl dark:shadow-gray-900 text-center";
 
@@ -279,7 +289,13 @@ function mostrarRamas(ramas) {
   const data = Object.values(resultados);
   const dataNormalizada = data.map((valor) => ((valor + 12) / 24) * 100);
 
-  const { backgroundColor, borderColor } = obtenerColoresChart();
+  const {
+    backgroundColor,
+    borderColor,
+    gridColor,
+    angleLineColor,
+    labelColor,
+  } = obtenerColoresChart();
 
   if (perfilChart) {
     perfilChart.destroy();
@@ -308,6 +324,15 @@ function mostrarRamas(ramas) {
           ticks: {
             display: false,
           },
+          grid: {
+            color: gridColor,
+          },
+          angleLines: {
+            color: angleLineColor,
+          },
+          pointLabels: {
+            color: labelColor,
+          },
         },
       },
       plugins: {
@@ -318,39 +343,69 @@ function mostrarRamas(ramas) {
           callbacks: {
             label: function (context) {
               const index = context.dataIndex;
-          const valorReal = data[index];
-          return `${labels[index]}: ${valorReal}`;
-            }
-          }
-        }
-      } 
+              const valorReal = data[index];
+              return `${labels[index]}: ${valorReal}`;
+            },
+          },
+        },
+      },
     },
   });
 
-  // Text results
+  //* Resultados
   const textDiv = document.createElement("div");
   textDiv.className = "result text-left";
 
   const sorted = Object.entries(resultados).sort((a, b) => b[1] - a[1]);
   const top3 = sorted.slice(0, 3).map((x) => x[0]);
 
-  const careers = {
-    Realista: ["Ingeniería Civil", "Arquitectura", "Ingeniería Mecánica"],
-    Investigador: ["Medicina", "Biotecnología", "Química"],
-    Artistico: ["Diseño Gráfico", "Artes", "Comunicación"],
-    Social: ["Psicología", "Enfermería", "Educación"],
-    Emprendedor: ["Administración", "Marketing", "Negocios"],
-    Convencional: ["Contabilidad", "Finanzas", "Administración"],
-  };
+  let html = `
+<div class="mb-2">
+  <h2 id="accordion-desc-heading-all">
+    <button type="button"
+      class="flex items-center justify-between w-full p-4 font-medium text-gray-900 dark:text-white border-b border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700 gap-3 transition-all duration-300"
+      data-accordion-target="#accordion-desc-body-all"
+      aria-expanded="false"
+      aria-controls="accordion-desc-body-all">
+      
+      <span class="text-lg font-semibold flex items-center"><svg class="w-5 h-5 me-2 shrink-0" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.529 9.988a2.502 2.502 0 1 1 5 .191A2.441 2.441 0 0 1 12 12.582V14m-.01 3.008H12M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/></svg>Conoce qué dice cada perfil de ti</span>
 
-  let html =
-    "<h3 class='text-2xl font-bold mb-4 mx-auto text-center text-gray-900 dark:text-white'>Top 3 perfiles:</h3>";
+      <svg data-accordion-icon class="w-5 h-5 transition-transform duration-300" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m5 15 7-7 7 7"/></svg>
 
-  // Crear acordeón para cada perfil
+    </button>
+  </h2>
+
+  <div id="accordion-desc-body-all"
+    class="hidden overflow-hidden transition-all duration-300 ease-in-out max-h-0"
+    aria-labelledby="accordion-desc-heading-all">
+    
+    <div class="p-4 space-y-6">
+`;
+
+  // Recorrer los 6 perfiles dentro del acordeón
+  Object.keys(RIASEC).forEach((perfil, index) => {
+    html += `
+      <div class="border-b border-gray-300 dark:border-gray-600 pb-4 last:border-b-0">
+        <h3 class="font-semibold text-gray-900 dark:text-white mb-2">${perfil}</h3>
+        <p class="text-gray-600 dark:text-gray-400 text-sm leading-relaxed">
+          ${RIASEC[perfil]}
+        </p>
+      </div>
+`;
+  });
+
+  html += `
+    </div>
+  </div>
+</div>
+
+<h3 class='text-2xl font-bold mb-4 mx-auto text-center text-gray-900 dark:text-white mt-6'>Top 3 perfiles:</h3>
+`;
+
+  // Crear acordeón para cada perfil del Top 3
   top3.forEach((perfil, index) => {
     const perfilCareers = careers[perfil] || [];
     const careersList = perfilCareers
-      .slice(0, 2)
       .map((c) => `<li class="text-gray-600 dark:text-gray-400">• ${c}</li>`)
       .join("");
 
@@ -390,10 +445,11 @@ function mostrarRamas(ramas) {
           // Abrir - anim max-height
           target.classList.remove("hidden");
           target.style.maxHeight = target.scrollHeight + "px";
-          // Rotar icono
-          button
-            .querySelector("[data-accordion-icon]")
-            .classList.add("rotate-180");
+          // Rotar icono si existe
+          const icon = button.querySelector("[data-accordion-icon]");
+          if (icon) {
+            icon.classList.add("rotate-180");
+          }
         } else {
           // Cerrar
           target.style.maxHeight = "0px";
@@ -401,10 +457,11 @@ function mostrarRamas(ramas) {
             target.classList.add("hidden");
             target.style.maxHeight = "";
           }, 300);
-          // Quitar rotación
-          button
-            .querySelector("[data-accordion-icon]")
-            .classList.remove("rotate-180");
+          // Quitar rotación si existe
+          const icon = button.querySelector("[data-accordion-icon]");
+          if (icon) {
+            icon.classList.remove("rotate-180");
+          }
         }
       });
     });
@@ -426,7 +483,7 @@ function mostrarRamas(ramas) {
 `;
   downloadBtn.className =
     "inline-flex items-center bg-blue-800 dark:bg-blue-400 text-white dark:text-black px-4 py-2 rounded-full hover:bg-blue-900 dark:hover:bg-blue-300 transition";
-  downloadBtn.onclick = () => downloadPDF(resultados);
+  downloadBtn.onclick = () => downloadPDF(resultados, respuestas);
   buttonContainer.appendChild(downloadBtn);
 
   const saveBtn = document.createElement("button");
@@ -458,12 +515,272 @@ function mostrarRamas(ramas) {
 }
 
 //* Funcion para descargar PDF
-function downloadPDF(scores) {
+function downloadPDF(scores, respuestas) {
   const { jsPDF } = window.jspdf;
-  let doc = new jsPDF();
-  doc.text("Resultado Vocacional", 20, 20);
-  doc.text(JSON.stringify(scores), 20, 40);
-  doc.save("resultado.pdf");
+  const doc = new jsPDF();
+  const pageWidth = doc.internal.pageSize.getWidth();
+  const pageHeight = doc.internal.pageSize.getHeight();
+  const margin = 20;
+  let yPos = margin;
+
+  // Colores
+  const primaryColor = [35, 56, 118]; // blue-900
+  const textColor = [50, 50, 50];
+  const lightGray = [240, 240, 240];
+
+  // Función auxiliar para dibujar línea horizontal
+  const drawLine = (y, color = lightGray) => {
+    doc.setDrawColor(...color);
+    doc.setLineWidth(0.5);
+    doc.line(margin, y, pageWidth - margin, y);
+  };
+
+  // Función auxiliar para nueva página si es necesario
+  const checkNewPage = (requiredSpace) => {
+    if (yPos + requiredSpace > pageHeight - margin) {
+      doc.addPage();
+      yPos = margin;
+      return true;
+    }
+    return false;
+  };
+
+  // === ENCABEZADO ===
+  doc.setFillColor(...primaryColor);
+  doc.rect(0, 0, pageWidth, 35, "F");
+
+  doc.setTextColor(255, 255, 255);
+  doc.setFontSize(22);
+  doc.setFont("helvetica", "bold");
+  doc.text("EduMatch", margin, 15);
+
+  doc.setFontSize(12);
+  doc.setFont("helvetica", "normal");
+  doc.text("Resultados del Perfil Vocacional", margin, 25);
+
+  // Fecha a la derecha
+  const fecha = new Date().toLocaleDateString("es-ES", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
+  doc.setFontSize(10);
+  doc.text(fecha, pageWidth - margin, 25, { align: "right" });
+
+  yPos = 45;
+
+  // === GRÁFICO RADAR ===
+  doc.setTextColor(...textColor);
+  doc.setFontSize(14);
+  doc.setFont("helvetica", "bold");
+  doc.text("Perfil RIASEC", margin, yPos);
+
+  // Obtener el canvas del gráfico y convertir a imagen
+
+  const chartCanvas = document.getElementById("chart");
+
+  if (chartCanvas && perfilChart) {
+    // Guardar estado actual
+    const originalOptions = JSON.parse(JSON.stringify(perfilChart.options));
+    const originalDataset = JSON.parse(
+      JSON.stringify(perfilChart.data.datasets),
+    );
+
+    // Forzar modo claro
+    aplicarModoClaroChart();
+
+    // Capturar imagen
+    const chartImg = chartCanvas.toDataURL("image/png", 1.0);
+
+    // Restaurar estado original
+    perfilChart.options = originalOptions;
+    perfilChart.data.datasets = originalDataset;
+    perfilChart.update("none");
+
+    const imgSize = 80;
+    const imgX = (pageWidth - imgSize) / 2;
+    doc.addImage(chartImg, "PNG", imgX, yPos, imgSize, imgSize);
+
+    yPos += imgSize + 5;
+  }
+
+  // === TABLA DE RESULTADOS ===
+  checkNewPage(60);
+  drawLine(yPos);
+  yPos += 10;
+
+  doc.setFontSize(14);
+  doc.setFont("helvetica", "bold");
+  doc.text("Puntuaciones por Área", margin, yPos);
+  yPos += 5;
+
+  // Ordenar resultados de mayor a menor
+  const sortedScores = Object.entries(scores).sort((a, b) => b[1] - a[1]);
+
+  // Encabezado de tabla
+  doc.setFillColor(...lightGray);
+  doc.rect(margin, yPos, pageWidth - margin * 2, 8, "F");
+
+  doc.setFontSize(10);
+  doc.setFont("helvetica", "bold");
+  doc.setTextColor(...textColor);
+  doc.text("Área", margin + 5, yPos + 5);
+  doc.text("Puntuación", pageWidth - margin - 30, yPos + 5);
+  yPos += 12;
+
+  // Filas de datos
+  doc.setFont("helvetica", "normal");
+  sortedScores.forEach(([area, score], index) => {
+    // Alternar colores de fondo
+    if (index % 2 === 0) {
+      doc.setFillColor(250, 250, 250);
+      doc.rect(margin, yPos - 2, pageWidth - margin * 2, 8, "F");
+    }
+
+    doc.text(area, margin + 5, yPos + 4);
+    doc.text(score.toString(), pageWidth - margin - 20, yPos + 4);
+    yPos += 8;
+  });
+
+  yPos += 5;
+
+  // === RESPUESTAS DE CADA PREGUNTA ===
+
+  // escala de resultados
+  const escala = {
+    "-2": "Totalmente en desacuerdo",
+    "-1": "En desacuerdo",
+    0: "Neutral",
+    1: "De acuerdo",
+    2: "Totalmente de acuerdo",
+  };
+
+  drawLine(yPos);
+  yPos += 10;
+  doc.setFontSize(14);
+  doc.setFont("helvetica", "bold");
+  doc.setTextColor(...textColor);
+  doc.text("Respuestas", margin, yPos);
+
+  yPos += 8;
+
+  doc.setFont("helvetica", "normal");
+  doc.setFontSize(8);
+  doc.setTextColor(...textColor);
+
+  // Configuración de columnas
+  const colCount = 4;
+  const colWidth = (pageWidth - margin * 2) / colCount;
+  const rowHeight = 6;
+
+  const itemsPerCol = Math.ceil(respuestas.length / colCount);
+
+  respuestas.forEach((valor, index) => {
+    const col = Math.floor(index / itemsPerCol);
+    const row = index % itemsPerCol;
+
+    const x = margin + col * colWidth;
+    const yActual = yPos + row * rowHeight;
+
+    const texto = escala[valor] ?? "Sin respuesta";
+
+    doc.text(`${index + 1}. ${texto}`, x, yActual);
+  });
+
+  // === TOP 3 PERFILES ===
+  checkNewPage(80);
+  doc.setFontSize(14);
+  doc.setFont("helvetica", "bold");
+  doc.text("Top 3 Perfiles Recomendados", margin, yPos);
+  yPos += 5;
+
+  sortedScores.slice(0, 3).forEach(([perfil, score], index) => {
+    // Verificar espacio disponible
+    checkNewPage(40);
+
+    // Número del perfil
+    doc.setFillColor(...primaryColor);
+    doc.circle(margin + 5, yPos + 3, 3, "F");
+    doc.setTextColor(255, 255, 255);
+    doc.setFontSize(8);
+    doc.setFont("helvetica", "bold");
+    doc.text((index + 1).toString(), margin + 5, yPos + 4, { align: "center" });
+
+    // Nombre del perfil
+    doc.setTextColor(...textColor);
+    doc.setFontSize(12);
+    doc.setFont("helvetica", "bold");
+    const xBase = margin + 12;
+    const yBase = yPos + 5;
+    doc.text(perfil, xBase, yBase - 0.5);
+    const perfilWidth = doc.getTextWidth(perfil);
+
+    // Puntuación
+    doc.setFontSize(10);
+    doc.setFont("helvetica", "normal");
+    doc.text(`(${score} pts)`, xBase + perfilWidth + 3, yBase - 0.5);
+
+    yPos += 8;
+
+    // Descripcion del perfil
+    const descripcion = RIASEC[perfil] || "Descripción no disponible";
+    doc.setFontSize(9);
+    doc.setTextColor(...textColor);
+    const descripcionLines = doc.splitTextToSize(
+      descripcion,
+      pageWidth - margin * 2 - 12,
+    );
+    descripcionLines.forEach((line) => {
+      checkNewPage(6);
+      doc.text(line, xBase, yPos + 3);
+      yPos += 5;
+    });
+
+    yPos += 3;
+    drawLine(yPos);
+    yPos += 4;
+
+    // carera recomendada subtitulo
+    doc.setFontSize(10);
+    doc.setFont("helvetica", "bold");
+    doc.text("Carreras recomendadas:", xBase, yPos + 3);
+    yPos += 6;
+
+    // Carreras recomendadas
+    const perfilCareers = careers[perfil] || [];
+    doc.setFontSize(9);
+    doc.setFont("helvetica", "normal");
+    doc.setTextColor(...textColor);
+    perfilCareers.forEach((carrera) => {
+      checkNewPage(10);
+      doc.text(`• ${carrera}`, margin + 12, yPos + 3);
+      yPos += 6;
+    });
+
+    yPos += 5;
+  });
+
+  // === PIE DE PÁGINA ===
+  yPos = pageHeight - 14;
+  drawLine(yPos);
+  yPos = pageHeight - 10;
+
+  doc.setFontSize(8);
+  doc.setTextColor(150, 150, 150);
+  doc.text("Generado por EduMatch - Guía vocacional", pageWidth / 2, yPos, {
+    align: "center",
+  });
+  doc.text(
+    "https://gaelarvizu477.github.io/EduMatch/",
+    pageWidth / 2,
+    yPos + 4,
+    {
+      align: "center",
+    },
+  );
+
+  // Guardar el PDF
+  doc.save("resultado-vocacional.pdf");
 }
 
 // Function to save result
