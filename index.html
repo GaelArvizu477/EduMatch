@@ -89,7 +89,7 @@
     <header class="sticky top-2 z-20 flex justify-center mt-2">
       <nav
         id="navbar"
-        class="bg-transparent border border-transparent transition-all duration-300 w-full start-0 relative px-8 p-1 rounded-full max-w-screen-xl w-[95%] dark:text-white"
+        class="bg-transparent border border-transparent transition-all duration-300 w-full start-0 relative px-4 sm:px-8 p-1 rounded-full max-w-screen-xl w-[95%] dark:text-white"
       >
         <div
           class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto"
@@ -99,7 +99,7 @@
             class="flex items-center space-x-3 rtl:space-x-reverse hover:scale-95 hover:text-blue-900 dark:hover:text-blue-400 transition-all duration-300 group"
           >
             <svg
-              class="w-12 h-12 text-blue-800 dark:text-blue-400"
+              class="w-8 h-8 sm:w-12 sm:h-12 text-blue-800 dark:text-blue-400"
               viewBox="60 70 100 100"
               xmlns="http://www.w3.org/2000/svg"
               fill="currentColor"
@@ -110,7 +110,7 @@
               />
             </svg>
             <span
-              class="self-center text-2xl text-heading font-extrabold tracking-wide whitespace-nowrap"
+              class="self-center text-xl sm:text-2xl text-heading font-extrabold tracking-wide whitespace-nowrap"
               >EduMatch
             </span>
           </a>
@@ -152,73 +152,48 @@
 
               <button
                 type="button"
-                class="text-white font-semibold bg-blue-800 dark:bg-blue-400 hover:bg-blue-900 dark:hover:bg-blue-300 focus:ring-4 focus:ring-blue-300 dark:focus:ring-blue-600 font-medium rounded-full text-sm px-5 py-2.5 shadow-md transition-all duration-200 dark:text-black"
+                class="text-white font-semibold bg-blue-800 dark:bg-blue-400 hover:bg-blue-900 dark:hover:bg-blue-300 focus:ring-4 focus:ring-blue-300 dark:focus:ring-blue-600 font-medium rounded-full text-xs sm:text-sm px-3 sm:px-5 py-2 sm:py-2.5 shadow-md transition-all duration-200 dark:text-black"
               >
                 Comienza ahora
               </button>
             </div>
 
-            <button
-              data-collapse-toggle="navbar-sticky"
-              type="button"
-              class="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-body rounded-base md:hidden hover:bg-neutral-secondary-soft hover:text-heading focus:outline-none focus:ring-2 focus:ring-neutral-tertiary"
-              aria-controls="navbar-sticky"
-              aria-expanded="false"
-            >
-              <span class="sr-only">Open main menu</span>
-              <svg
-                class="w-6 h-6"
-                aria-hidden="true"
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                fill="none"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  stroke="currentColor"
-                  stroke-linecap="round"
-                  stroke-width="2"
-                  d="M5 7h14M5 12h14M5 17h14"
-                />
-              </svg>
-            </button>
+            
           </div>
         </div>
       </nav>
     </header>
 
-    <main class="relative z-10 pt-10">
+    <main class="relative z-10 pt-6 sm:pt-10">
 
       <!--* INICIO -->
 
-      <div class="p-6 block max-w-4xl mx-auto">
+      <div class="p-4 sm:p-6 block max-w-4xl mx-auto">
         <h1
-          class="text-heading text-6xl font-bold text-center tracking-wide dark:text-white animate-pulse [animation-duration:0.6s] [animation-iteration-count:1]"
+          class="text-heading text-4xl sm:text-6xl font-bold text-center tracking-wide dark:text-white animate-pulse [animation-duration:0.6s] [animation-iteration-count:1]"
         >
           La herramienta para descubrir tu futuro
         </h1>
         <p
-          class="text-center p-4 max-w-3xl block mx-auto text-gray-700 mt-7 text-lg tracking-wide dark:text-gray-300"
+          class="text-center p-4 sm:p-4 max-w-3xl block mx-auto text-gray-700 mt-7 text-base sm:text-lg tracking-wide dark:text-gray-300"
         >
           Lorem ipsum dolor, sit amet consectetur adipisicing elit. Assumenda
           eligendi magni eius earum, perspiciatis sunt autem. Blanditiis, harum
           iste. Labore at natus sunt in reprehenderit quae nesciunt magnam
           laboriosam molestias.
         </p>
-        <!-- Botones -->
-        <div class="flex items-center justify-center gap-5 mt-5">
+        <div class="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-5 mt-5">
           <a
             href="#test"
-            class="inline-flex font-semibold items-center text-white dark:text-black bg-blue-800 dark:bg-blue-400 dark:hover:bg-blue-300 hover:bg-blue-900 focus:ring-4 focus:ring-blue-300 shadow-sm font-medium rounded-full text-lg px-4 py-2.5 px-5 focus:outline-none transition"
+            class="inline-flex font-semibold items-center text-white dark:text-black bg-blue-800 dark:bg-blue-400 dark:hover:bg-blue-300 hover:bg-blue-900 focus:ring-4 focus:ring-blue-300 shadow-sm font-medium rounded-full text-sm sm:text-lg px-3 sm:px-4 py-2 sm:py-2.5 px-4 sm:px-5 focus:outline-none transition"
           >
             Comienza
           </a>
-          <p class="text-body">
-            <a
-              href="#"
-              class="inline-flex items-center font-medium text-lg hover:underline px-5 dark:text-white"
-            >
+            <p class="text-body">
+              <a
+                href="#"
+                class="inline-flex items-center font-medium text-sm sm:text-lg hover:underline px-4 sm:px-5 dark:text-white"
+              >
               Conoce más
               <svg
                 class="w-5 h-5 ms-1 rtl:rotate-180"
@@ -243,22 +218,22 @@
       </div>
 
       <!-- Separador -->
-      <div class="w-full flex justify-center mt-10">
+      <div class="w-full flex justify-center mt-6 sm:mt-10">
         <div
           class="max-w-3xl w-full h-0.5 bg-gray-200 dark:bg-[#302F32] rounded-full"
         ></div>
       </div>
 
-      <!--* ARTICULO 1 -->
-      <article class="p-6 mt-2 block max-w-3xl mx-auto">
+      <!-- Articulo 1 -->
+      <article class="p-4 sm:p-6 block max-w-3xl mx-auto">
         <h3
-          class="text-heading text-4xl font-bold text-center tracking-wide dark:text-white"
+          class="text-heading text-3xl sm:text-4xl font-bold text-center tracking-wide dark:text-white"
         >
           Lorem ipsum dolor sit amet consectetur adipisicing elit.
         </h3>
 
         <p
-          class="text-justify p-4 max-w-3xl block mx-auto text-gray-700 mt-7 dark:text-gray-300"
+          class="text-justify p-3 sm:p-4 max-w-3xl block mx-auto text-gray-700 mt-7 dark:text-gray-300"
         >
           Lorem ipsum dolor, sit amet consectetur adipisicing elit. Assumenda
           eligendi magni eius earum, perspiciatis sunt autem. Blanditiis, harum
@@ -266,7 +241,7 @@
           laboriosam molestias.
         </p>
         <p
-          class="text-justify p-4 max-w-3xl block mx-auto text-gray-700 dark:text-gray-300"
+          class="text-justify p-3 sm:p-4 max-w-3xl block mx-auto text-gray-700 dark:text-gray-300"
         >
           Lorem ipsum dolor sit amet consectetur adipisicing elit. Fugiat at
           quod itaque reprehenderit quisquam dignissimos iusto dolorum, magni
@@ -281,17 +256,18 @@
       </div>
       -->
 
-      <!--* TARJETA DEL CUESTIONARIO -->
+      <!-- Tarjeta cuestionario -->
+      <article class="p-4 sm:p-6 mt-2 block max-w-3xl mx-auto">
       <div
-        class="bg-gray-50 dark:bg-[#1F2229] block max-w-2xl p-6 border border-gray-300 dark:border-gray-800 rounded-2xl shadow-2xl shadow-blue-100 dark:shadow-gray-900 mx-auto mb-5"
+        class="bg-gray-50 dark:bg-[#1F2229] block max-w-2xl p-4 sm:p-6 border border-gray-300 dark:border-gray-800 rounded-2xl shadow-2xl shadow-blue-100 dark:shadow-gray-900 mx-auto mb-5"
       >
         <h5
           id="test"
-          class="mb-3 text-2xl font-semibold text-heading tracking-tight text-gray-900 leading-8 tracking-wide font-medium dark:text-white"
+          class="mb-3 text-xl sm:text-2xl font-semibold text-heading tracking-tight text-gray-900 leading-8 tracking-wide font-medium dark:text-white"
         >
           Comienza el test ahora
         </h5>
-        <p class="text-gray-700 dark:text-gray-300 mb-2">
+        <p class="text-gray-700 dark:text-gray-300 mb-2 text-sm sm:text-base">
           Comienza ahora para conocer tu futura carrera
         </p>
 
@@ -310,7 +286,7 @@
                 d="M528 320C528 205.1 434.9 112 320 112C205.1 112 112 205.1 112 320C112 434.9 205.1 528 320 528C434.9 528 528 434.9 528 320zM64 320C64 178.6 178.6 64 320 64C461.4 64 576 178.6 576 320C576 461.4 461.4 576 320 576C178.6 576 64 461.4 64 320zM320 240C302.3 240 288 254.3 288 272C288 285.3 277.3 296 264 296C250.7 296 240 285.3 240 272C240 227.8 275.8 192 320 192C364.2 192 400 227.8 400 272C400 319.2 364 339.2 344 346.5L344 350.3C344 363.6 333.3 374.3 320 374.3C306.7 374.3 296 363.6 296 350.3L296 342.2C296 321.7 310.8 307 326.1 302C332.5 299.9 339.3 296.5 344.3 291.7C348.6 287.5 352 281.7 352 272.1C352 254.4 337.7 240.1 320 240.1zM288 432C288 414.3 302.3 400 320 400C337.7 400 352 414.3 352 432C352 449.7 337.7 464 320 464C302.3 464 288 449.7 288 432z"
               />
             </svg>
-            <span class="ml-2">36 Preguntas</span>
+            <span class="ml-2 text-sm sm:text-base">36 Preguntas</span>
           </p>
 
           <p
@@ -327,12 +303,12 @@
                 d="M466.6 114.2C461.2 115.9 455.3 116 450.4 113.3C444.6 110.1 438.6 107.1 432.6 104.4C422.2 99.7 418.9 86.1 428.5 79.8C443.5 69.9 461.5 64.1 480.8 64.1C533.4 64.1 576 106.7 576 159.3C576 172.5 573.3 185.1 568.4 196.6C563.9 207.1 550 206.4 543.5 197C539.7 191.5 535.7 186.2 531.5 181C528 176.6 527 170.8 527.7 165.2C527.9 163.3 528.1 161.3 528.1 159.3C528.1 133.2 506.9 112.1 480.9 112.1C476 112.1 471.2 112.9 466.7 114.3zM96.5 196.9C90 206.3 76 207 71.6 196.5C66.7 185 64 172.4 64 159.2C64 106.6 106.6 64 159.2 64C178.5 64 196.5 69.8 211.5 79.7C221.1 86 217.8 99.6 207.4 104.3C201.3 107.1 195.4 110 189.6 113.2C184.7 115.9 178.7 115.8 173.4 114.1C168.9 112.7 164.2 111.9 159.2 111.9C133.1 111.9 112 133.1 112 159.1C112 161.1 112.1 163.1 112.4 165C113.1 170.6 112.1 176.4 108.6 180.8C104.4 186 100.4 191.3 96.6 196.8zM496 352C496 254.8 417.2 176 320 176C222.8 176 144 254.8 144 352C144 449.2 222.8 528 320 528C417.2 528 496 449.2 496 352zM460.5 526.5C422.1 557.4 373.2 576 320 576C266.8 576 217.9 557.4 179.5 526.5L137 569C127.6 578.4 112.4 578.4 103.1 569C93.8 559.6 93.7 544.4 103.1 535.1L145.6 492.6C114.6 454.1 96 405.2 96 352C96 228.3 196.3 128 320 128C443.7 128 544 228.3 544 352C544 405.2 525.4 454.1 494.5 492.5L537 535C546.4 544.4 546.4 559.6 537 568.9C527.6 578.2 512.4 578.3 503.1 568.9L460.6 526.4zM344 248L344 342.1L385 383.1C394.4 392.5 394.4 407.7 385 417C375.6 426.3 360.4 426.4 351.1 417L303.1 369C298.6 364.5 296.1 358.4 296.1 352L296.1 248C296.1 234.7 306.8 224 320.1 224C333.4 224 344.1 234.7 344.1 248z"
               />
             </svg>
-            <span class="ml-2"> 10-15 Minutos </span>
+            <span class="ml-2 text-sm sm:text-base"> 10-15 Minutos </span>
           </p>
 
           <a
             href="cuestionario.html"
-            class="inline-flex self-start items-center font-semibold text-white dark:text-black bg-blue-800 dark:bg-blue-400 hover:bg-blue-900 dark:hover:bg-blue-300 focus:ring-4 focus:ring-blue-300 shadow-sm font-medium rounded-full text-sm px-4 py-2.5 focus:outline-none transition mt-4"
+            class="inline-flex self-start items-center font-semibold text-white dark:text-black bg-blue-800 dark:bg-blue-400 hover:bg-blue-900 dark:hover:bg-blue-300 focus:ring-4 focus:ring-blue-300 shadow-sm font-medium rounded-full text-xs sm:text-sm px-3 sm:px-4 py-2 sm:py-2.5 focus:outline-none transition mt-4"
           >
             Comenzar test
             <svg
@@ -352,11 +328,12 @@
           </a>
         </div>
       </div>
+    </article>
 
-      <!--* ARTICULO 2 -->
-      <article class="p-6 block max-w-3xl mx-auto">
+      <!-- Tabla  -->
+      <article class="p-4 sm:p-6 mt-2 block max-w-3xl mx-auto">
         <h3
-          class="text-heading text-4xl font-bold text-center tracking-wide dark:text-white"
+          class="text-heading text-3xl sm:text-4xl font-bold text-center tracking-wide dark:text-white"
         >
           ¿De qué manera me ayudará un test para saber que estudiar?
         </h3>
@@ -372,12 +349,12 @@
             >
               <tr>
                 <th
-                  class="px-6 py-3 bg-white dark:bg-[#1F2229] font-semibold w-1/2"
+                  class="px-3 sm:px-6 py-3 bg-white dark:bg-[#1F2229] font-semibold w-1/2"
                 >
                   Enfoque adecuado
                 </th>
                 <th
-                  class="px-6 py-3 bg-white dark:bg-[#1F2229] font-semibold w-1/2"
+                  class="px-3 sm:px-6 py-3 bg-white dark:bg-[#1F2229] font-semibold w-1/2"
                 >
                   Enfoque equivocado
                 </th>
@@ -388,20 +365,20 @@
               <tr
                 class="border-b border-gray-200 dark:border-gray-800 bg-gray-100 dark:bg-[#2D3038]"
               >
-                <td class="px-6 py-4">
+                <td class="px-3 sm:px-6 py-4">
                   Conocer tus fortalezas y debilidades, siendo realista con tus
                   habilidades
                 </td>
-                <td class="px-6 py-4">
+                <td class="px-3 sm:px-6 py-4">
                   Creer que cualquier carrera será fácil desde el inicio
                 </td>
               </tr>
 
               <tr class="border-b border-gray-200 dark:border-gray-800">
-                <td class="px-6 py-4">
+                <td class="px-3 sm:px-6 py-4">
                   Buscar una profesión que encaje contigo y tus intereses
                 </td>
-                <td class="px-6 py-4">
+                <td class="px-3 sm:px-6 py-4">
                   Elegir solo por la demanda o popularidad del momento
                 </td>
               </tr>
@@ -409,27 +386,27 @@
               <tr
                 class="border-b border-gray-200 dark:border-gray-800 bg-gray-100 dark:bg-[#2D3038]"
               >
-                <td class="px-6 py-4">
+                <td class="px-3 sm:px-6 py-4">
                   Estar dispuesto a esforzarte y desarrollarte constantemente
                 </td>
-                <td class="px-6 py-4">
+                <td class="px-3 sm:px-6 py-4">
                   Pensar que el éxito de otros garantiza tu propio éxito
                 </td>
               </tr>
 
               <tr class="border-b border-gray-200 dark:border-gray-800">
-                <td class="px-6 py-4">
+                <td class="px-3 sm:px-6 py-4">
                   Investigar a fondo la carrera antes de decidir
                 </td>
-                <td class="px-6 py-4">Elegir únicamente por el dinero</td>
+                <td class="px-3 sm:px-6 py-4">Elegir únicamente por el dinero</td>
               </tr>
 
               <tr class="bg-gray-100 dark:bg-[#2D3038]">
-                <td class="px-6 py-4">
+                <td class="px-3 sm:px-6 py-4">
                   Considerar el valor de las habilidades tanto para ti como para
                   el mercado laboral
                 </td>
-                <td class="px-6 py-4">
+                <td class="px-3 sm:px-6 py-4">
                   Tomar decisiones impulsivas solo para salir de tu situación
                   actual
                 </td>
@@ -441,12 +418,13 @@
     </main>
 
     <footer
-      class="mx-auto max-w-2xl bg-gray-100 dark:bg-[#1F2229] rounded-2xl text-gray dark:text-gray-300 shadow-md dark:shadow-gray-900 border border-gray-200 dark:border-gray-800 m-4 relative z-10"
+      class="w-full flex justify-center"
     >
-      <div class="mx-auto p-4 px-8 md:flex md:items-center md:justify-between">
-        <div class="flex items-center space-x-1">
+      <div class="mx-auto max-w-sm sm:max-w-2xl bg-gray-100 dark:bg-[#1F2229] rounded-2xl text-gray dark:text-gray-300 shadow-md dark:shadow-gray-900 border border-gray-200 dark:border-gray-800 m-2 sm:m-4 relative z-10">
+      <div class="mx-auto p-3 sm:p-4 px-4 sm:px-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-6">
+        <div class="flex items-center justify-center sm:justify-start space-x-1 sm:flex-shrink-0">
           <svg
-            class="w-8 h-8 text-gray-800 dark:text-gray-300"
+            class="w-6 h-6 sm:w-8 sm:h-8 text-gray-800 dark:text-gray-300"
             viewBox="60 70 100 100"
             xmlns="http://www.w3.org/2000/svg"
             fill="currentColor"
@@ -457,13 +435,13 @@
             />
           </svg>
           <span
-            class="self-center text-md font-semibold tracking-wide whitespace-nowrap text-gray-800 dark:text-gray-300"
+            class="self-center text-sm sm:text-md font-semibold tracking-wide whitespace-nowrap text-gray-800 dark:text-gray-300"
             >EduMatch
           </span>
         </div>
 
         <!-- Texto central -->
-        <div class="text-sm text-center md:text-left">
+        <div class="text-xs sm:text-sm text-center sm:flex-1">
           <p>Descubre tu perfil vocacional con el modelo RIASEC.</p>
           <p class="text-xs text-gray-500 dark:text-gray-400">
             Este test es orientativo y no reemplaza asesoría profesional.
@@ -472,10 +450,11 @@
 
         <!-- Copyright -->
         <div
-          class="text-xs text-gray-500 dark:text-gray-400 text-center md:text-right"
+          class="text-xs text-gray-500 dark:text-gray-400 text-center sm:text-right sm:flex-shrink-0"
         >
           © 2026 EduMatch
         </div>
+      </div>
       </div>
     </footer>
 
