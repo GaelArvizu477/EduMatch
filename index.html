@@ -11,10 +11,10 @@
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
     />
   </head>
-  <body class="bg-gray-100 dark:bg-[#1B1B1D]">
+  <body class="bg-gray-100 dark:bg-[#1B1B1D] overflow-x-hidden">
     <!-- Patrones de fondo -->
     <div
-      class="fixed top-0 left-0 w-screen h-dvh z-0 opacity-30 overflow-hidden pointer-events-none transform-gpu"
+      class="fixed inset-0 w-full h-full min-h-screen z-0 opacity-30 overflow-hidden pointer-events-none will-change-transform"
     >
       <!-- Version clara del patron de fondo -->
       <svg
@@ -654,7 +654,7 @@
           navbar.classList.remove("bg-transparent", "border-transparent");
         } else {
           navbar.classList.remove(
-            "bg-gray-100",
+            "bg-gray-50",
             "dark:bg-[#1F2229]",
             "border-b",
             "border-gray-300",

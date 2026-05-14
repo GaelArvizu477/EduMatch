@@ -90,7 +90,7 @@
     </div>
 
     <!-- Navbar-->
-    <header class="sticky top-2 z-20 flex justify-center mt-2">
+     <header class="sticky top-2 z-20 flex justify-center mt-2">
       <nav
         id="navbar"
         class="bg-transparent border border-transparent transition-all duration-300 w-full start-0 relative px-4 sm:px-8 p-1 rounded-full max-w-screen-xl w-[95%] dark:text-white"
@@ -255,6 +255,35 @@
             }
           });
         });
+      });
+    </script>
+    <script>
+      const navbar = document.getElementById("navbar");
+
+      window.addEventListener("scroll", () => {
+        if (window.scrollY > 20) {
+          navbar.classList.add(
+            "bg-gray-50",
+            "dark:bg-[#1F2229]",
+            "border-b",
+            "border-gray-300",
+            "dark:border-gray-800",
+            "shadow-sm",
+            "dark:shadow-gray-900",
+          );
+          navbar.classList.remove("bg-transparent", "border-transparent");
+        } else {
+          navbar.classList.remove(
+            "bg-gray-50",
+            "dark:bg-[#1F2229]",
+            "border-b",
+            "border-gray-300",
+            "dark:border-gray-800",
+            "shadow-sm",
+            "dark:shadow-gray-900",
+          );
+          navbar.classList.add("bg-transparent", "border-transparent");
+        }
       });
     </script>
   </body>
