@@ -1,4 +1,4 @@
-// Este arreglo se usa para testear
+/* Este arreglo se usa para testear
  const preguntas = [
    // REALISTA
    {
@@ -11,8 +11,8 @@
      area: "realista",
    },
  ];
-//
-/*
+*/
+
 //! Arreglo de preguntas
 const preguntas = [
   // REALISTA
@@ -63,7 +63,7 @@ const preguntas = [
   { texto: "¿Eres hábil para clasificar y catalogar objetos de forma sistemática?", area: "convencional" },
   { texto: "¿Te sientes cómodo siguiendo procedimientos paso a paso sin desviarte?", area: "convencional" }
 ];
-*/
+
 
 //! Descripciones de cada perfil
 const perfilesRiasc = {
