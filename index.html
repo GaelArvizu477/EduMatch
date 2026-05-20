@@ -594,30 +594,30 @@
       };
     </script>
     <script>
-      // Theme toggle functionality
-      const themeToggleBtn = document.getElementById("theme-toggle");
-      const darkIcon = document.getElementById("theme-toggle-dark-icon");
-      const lightIcon = document.getElementById("theme-toggle-light-icon");
+      //! Alternar tema
+      const botonAlternarTema = document.getElementById("theme-toggle");
+      const iconoTemaOscuro = document.getElementById("theme-toggle-dark-icon");
+      const iconoTemaClaro = document.getElementById("theme-toggle-light-icon");
 
-      // Check for saved theme preference or system preference
+      //! Revisar preferencia de tema guardada o preferencia del sistema
       if (
         localStorage.getItem("color-theme") === "dark" ||
         (!("color-theme" in localStorage) &&
           window.matchMedia("(prefers-color-scheme: dark)").matches)
       ) {
         document.documentElement.classList.add("dark");
-        darkIcon.classList.remove("hidden");
+        iconoTemaOscuro.classList.remove("hidden");
       } else {
         document.documentElement.classList.remove("dark");
-        lightIcon.classList.remove("hidden");
+        iconoTemaClaro.classList.remove("hidden");
       }
 
-      themeToggleBtn.addEventListener("click", function () {
-        // Toggle icons
-        darkIcon.classList.toggle("hidden");
-        lightIcon.classList.toggle("hidden");
+      botonAlternarTema.addEventListener("click", function () {
+        //! Alternar iconos
+        iconoTemaOscuro.classList.toggle("hidden");
+        iconoTemaClaro.classList.toggle("hidden");
 
-        // Toggle theme
+        //! Alternar tema
         if (localStorage.getItem("color-theme")) {
           if (localStorage.getItem("color-theme") === "light") {
             document.documentElement.classList.add("dark");

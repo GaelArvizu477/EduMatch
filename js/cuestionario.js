@@ -1,68 +1,71 @@
 const contenedor = document.getElementById("cuestionario");
 
-let respuestas = []; // Arreglo para guardar respuestas del usuario
-let preguntaActual = 0; // Indice de pregunta actual
-let perfilChart = null;
+let respuestas = [];
+let preguntaActual = 0;
+let graficoPerfil = null;
 
-function obtenerColoresChart() {
-  const isDark = document.documentElement.classList.contains("dark");
+//! Paleta de colores del gráfico según tema
+function obtenerColoresGrafico() {
+  const estaOscuro = document.documentElement.classList.contains("dark");
   return {
-    backgroundColor: isDark ? "#1E429F33" : "#76A9FA33",
-    borderColor: isDark ? "#76A9FA" : "#1E429F",
+    backgroundColor: estaOscuro ? "#1E429F33" : "#76A9FA33",
+    borderColor: estaOscuro ? "#76A9FA" : "#1E429F",
 
-    gridColor: isDark ? "#9ea5b11a" : "#37415133",
-    angleLineColor: isDark ? "#9ea5b11a" : "#37415133",
-    labelColor: isDark ? "#D1D5DB" : "#374151",
+    gridColor: estaOscuro ? "#9ea5b11a" : "#37415133",
+    angleLineColor: estaOscuro ? "#9ea5b11a" : "#37415133",
+    labelColor: estaOscuro ? "#D1D5DB" : "#374151",
   };
 }
 
-// Funcion para dibujar el canvas en modo claro en el PDF
-function aplicarModoClaroChart() {
-  if (!perfilChart) return;
+//! Ajustes del gráfico para exportar en modo claro
+function aplicarModoClaroGrafico() {
+  if (!graficoPerfil) return;
 
-  // Colores tipo light mode (forzados)
-  perfilChart.options.scales.r.grid.color = "#37415133";
-  perfilChart.options.scales.r.angleLines.color = "#37415133";
-  perfilChart.options.scales.r.pointLabels.color = "#374151";
+  //* Colores forzados para versión clara en PDF
+  graficoPerfil.options.scales.r.grid.color = "#37415133";
+  graficoPerfil.options.scales.r.angleLines.color = "#37415133";
+  graficoPerfil.options.scales.r.pointLabels.color = "#374151";
 
-  perfilChart.data.datasets[0].backgroundColor = "#76A9FA33";
-  perfilChart.data.datasets[0].borderColor = "#1E429F";
+  graficoPerfil.data.datasets[0].backgroundColor = "#76A9FA33";
+  graficoPerfil.data.datasets[0].borderColor = "#1E429F";
 
-  perfilChart.update("none");
+  graficoPerfil.update("none");
 }
 
-function actualizarPaletaChart() {
-  if (!perfilChart) return;
+//! Actualiza colores del gráfico cuando cambia el tema
+function actualizarPaletaGrafico() {
+  if (!graficoPerfil) return;
   const {
     backgroundColor,
     borderColor,
     gridColor,
     angleLineColor,
     labelColor,
-  } = obtenerColoresChart();
+  } = obtenerColoresGrafico();
 
-  // Actualizar colores de datasets
-  perfilChart.data.datasets[0].backgroundColor = backgroundColor;
-  perfilChart.data.datasets[0].borderColor = borderColor;
+  //* Actualizar colores de datasets
+  graficoPerfil.data.datasets[0].backgroundColor = backgroundColor;
+  graficoPerfil.data.datasets[0].borderColor = borderColor;
 
-  // Actualizar colores de grid, angleLines y pointLabels
-  perfilChart.options.scales.r.grid.color = gridColor;
-  perfilChart.options.scales.r.angleLines.color = angleLineColor;
-  perfilChart.options.scales.r.pointLabels.color = labelColor;
+  //* Actualizar colores de grid, angleLines y pointLabels
+  graficoPerfil.options.scales.r.grid.color = gridColor;
+  graficoPerfil.options.scales.r.angleLines.color = angleLineColor;
+  graficoPerfil.options.scales.r.pointLabels.color = labelColor;
 
-  perfilChart.update();
+  graficoPerfil.update();
 }
 
+//! Ruta de la imagen de instrucciones según tema
 function obtenerRutaImagenInstrucciones() {
   return document.documentElement.classList.contains("dark")
     ? "./imagenes/RespuestasOscuro.svg"
     : "./imagenes/RespuestasClaro.svg";
 }
 
-const themeObserver = new MutationObserver((mutations) => {
+const observadorTema = new MutationObserver((mutations) => {
   for (const mutation of mutations) {
     if (mutation.type === "attributes" && mutation.attributeName === "class") {
-      actualizarPaletaChart();
+      actualizarPaletaGrafico();
       const instruccionImg = document.getElementById("imagen-instrucciones");
       if (instruccionImg) {
         instruccionImg.src = obtenerRutaImagenInstrucciones();
@@ -72,12 +75,12 @@ const themeObserver = new MutationObserver((mutations) => {
   }
 });
 
-themeObserver.observe(document.documentElement, {
+observadorTema.observe(document.documentElement, {
   attributes: true,
   attributeFilter: ["class"],
 });
 
-const OPCIONES = [
+const opciones = [
   { value: -2, text: "Totalmente en desacuerdo" },
   { value: -1, text: "En desacuerdo" },
   { value: 0, text: "Neutral" },
@@ -85,7 +88,7 @@ const OPCIONES = [
   { value: 2, text: "Totalmente de acuerdo" },
 ];
 
-// Funcion para mostrar las instrucciones del test
+//! Mostrar las instrucciones del test
 function mostrarInstrucciones() {
   contenedor.innerHTML = "";
 
@@ -141,7 +144,7 @@ function mostrarInstrucciones() {
     mostrarPregunta();
   };
 
-  // Agregar elementos
+  //* Agregar elementos
   bloque.appendChild(imagen);
   bloque.appendChild(titulo);
   bloque.appendChild(lista);
@@ -150,7 +153,7 @@ function mostrarInstrucciones() {
   contenedor.appendChild(bloque);
 }
 
-// Función para crear barra de progreso
+//! Crear la barra de progreso
 function crearBarraProgreso(bloque) {
   const barraTexto = document.createElement("div");
   barraTexto.className = "flex justify-between mb-1";
@@ -189,9 +192,9 @@ function crearBarraProgreso(bloque) {
   bloque.appendChild(indicePregunta);
 }
 
-// Función para crear opciones de radio
+//! Crear las opciones de radio
 function crearOpciones(bloque) {
-  OPCIONES.forEach((opcion) => {
+  opciones.forEach((opcion) => {
     const div = document.createElement("div");
     div.className = "flex items-center mb-3 sm:mb-4 dark:text-white text-sm sm:text-base";
 
@@ -220,13 +223,13 @@ function crearOpciones(bloque) {
   });
 }
 
-// Función para crear botones
+//! Crear los botones de navegación
 function crearBotones(bloque) {
   const botonContenedor = document.createElement("div");
   botonContenedor.className = "flex flex-col-reverse sm:flex-row justify-between gap-3 sm:gap-2 mt-auto";
   bloque.appendChild(botonContenedor);
 
-  // Botón Atrás
+  //* Botón Atrás
   const atras = document.createElement("button");
   atras.type = "button";
   atras.className =
@@ -250,7 +253,7 @@ function crearBotones(bloque) {
     atras.disabled = true;
   }
 
-  // Botón Siguiente
+  //* Botón Siguiente
   const siguiente = document.createElement("button");
   siguiente.type = "button";
   siguiente.className =
@@ -290,7 +293,7 @@ function crearBotones(bloque) {
   botonContenedor.appendChild(siguiente);
 }
 
-// Mostrar Pregunta
+//! Mostrar la pregunta actual
 function mostrarPregunta() {
   contenedor.innerHTML = "";
   const p = preguntas[preguntaActual];
@@ -322,7 +325,7 @@ function mostrarResultados() {
   mostrarPerfiles(resultados);
 }
 
-// Calcular resultados
+//! Calcular puntajes por área
 function calcularResultados() {
   const resultados = {
     Realista: 0,
@@ -343,9 +346,9 @@ function calcularResultados() {
   return resultados;
 }
 
-//* Mostrar resultados en pantalla
+//! Mostrar resultados en pantalla
 function mostrarPerfiles(resultados) {
-  // Limpiar cuestionario
+  //* Limpiar cuestionario
   document.getElementById("cuestionario").innerHTML = "";
   const resultadosDiv = document.getElementById("resultados");
   resultadosDiv.innerHTML = "";
@@ -355,13 +358,13 @@ function mostrarPerfiles(resultados) {
   contenedor.className =
     "w-full max-w-2xl min-h-[460px] mx-auto mt-4 sm:mt-8 mb-6 sm:mb-10 flex flex-col bg-gray-100 dark:bg-[#1F2229] p-4 sm:p-6 border border-gray-300 dark:border-gray-700 rounded-xl sm:rounded-2xl shadow-lg sm:shadow-2xl dark:shadow-gray-900 text-center";
 
-  // Title
+  //* Título de la sección de resultados
   const title = document.createElement("h2");
   title.innerText = "Tu perfil";
   title.className = "text-2xl sm:text-3xl md:text-4xl font-bold mb-3 sm:mb-4 text-gray-900 dark:text-white";
   contenedor.appendChild(title);
 
-  // Canvas for chart
+  //* Canvas para el gráfico
   const canvas = document.createElement("canvas");
   canvas.id = "chart";
   canvas.width = 400;
@@ -372,7 +375,7 @@ function mostrarPerfiles(resultados) {
   canvas.className = "mx-auto mb-4 sm:mb-6 w-full max-w-[280px] sm:max-w-[350px] md:max-w-[400px]";
   contenedor.appendChild(canvas);
 
-  // Create radar chart
+  //* Crear gráfico radar
   const labels = Object.keys(resultados);
   const data = Object.values(resultados);
   const dataNormalizada = data.map((valor) => ((valor + 12) / 24) * 100);
@@ -383,13 +386,13 @@ function mostrarPerfiles(resultados) {
     gridColor,
     angleLineColor,
     labelColor,
-  } = obtenerColoresChart();
+  } = obtenerColoresGrafico();
 
-  if (perfilChart) {
-    perfilChart.destroy();
+  if (graficoPerfil) {
+    graficoPerfil.destroy();
   }
 
-  perfilChart = new Chart(canvas, {
+  graficoPerfil = new Chart(canvas, {
     type: "radar",
     data: {
       labels: labels,
@@ -441,11 +444,11 @@ function mostrarPerfiles(resultados) {
   });
 
   //* Resultados
-  const textDiv = document.createElement("div");
-  textDiv.className = "result text-left overflow-x-hidden";
+  const contenedorTexto = document.createElement("div");
+  contenedorTexto.className = "result text-left overflow-x-hidden";
 
-  const sorted = Object.entries(resultados).sort((a, b) => b[1] - a[1]);
-  const top3 = sorted.slice(0, 3).map((x) => x[0]);
+  const resultadosOrdenados = Object.entries(resultados).sort((a, b) => b[1] - a[1]);
+  const topTres = resultadosOrdenados.slice(0, 3).map((x) => x[0]);
 
   let html = `
 <div class="mb-2">
@@ -470,13 +473,13 @@ function mostrarPerfiles(resultados) {
     <div class="p-3 sm:p-4 space-y-4 sm:space-y-6">
 `;
 
-  // Recorrer los 6 perfiles dentro del acordeón
-  Object.keys(RIASEC).forEach((perfil, index) => {
+  //* Recorrer los 6 perfiles dentro del acordeón
+  Object.keys(perfilesRiasc).forEach((perfil) => {
     html += `
       <div class="border-b border-gray-300 dark:border-gray-600 pb-3 sm:pb-4 last:border-b-0">
         <h3 class="font-semibold text-gray-900 dark:text-white mb-2 text-sm sm:text-base">${perfil}</h3>
         <p class="text-gray-600 dark:text-gray-400 text-xs sm:text-sm leading-relaxed">
-          ${RIASEC[perfil]}
+          ${perfilesRiasc[perfil]}
         </p>
       </div>
 `;
@@ -490,12 +493,40 @@ function mostrarPerfiles(resultados) {
 <h3 class='text-xl sm:text-2xl md:text-3xl font-bold mb-3 sm:mb-4 mx-auto text-center text-gray-900 dark:text-white mt-4 sm:mt-6'>Top 3 perfiles:</h3>
 `;
 
-  // Crear acordeón para cada perfil del Top 3
-  top3.forEach((perfil, index) => {
-    const perfilCareers = careers[perfil] || [];
-    const careersList = perfilCareers
-      .map((c) => `<li class=\"text-gray-600 dark:text-gray-400 text-xs sm:text-sm\">• ${c}</li>`)
-      .join("");
+  //* Crear acordeón para cada perfil del top tres
+  topTres.forEach((perfil, index) => {
+    const ClavePerfil = perfil.toLowerCase();
+    const carrerasPerfil = carrerasPorPerfil[ClavePerfil] || [];
+    const tablaCarreras = carrerasPerfil.length
+      ? `
+        <div class="overflow-hidden rounded-lg">
+          <div class="hidden sm:grid grid-cols-[1.5fr_0.8fr] gap-3 px-3 py-3 text-[0.68rem] sm:text-xs uppercase tracking-[0.12em] text-gray-500 dark:text-gray-400 bg-white dark:dark:bg-[#2D3038]">
+            <span>Nombre de la carrera</span>
+            <span class="text-right">Campus</span>
+          </div>
+          <table class="w-full text-sm sm:text-base border-separate border-spacing-y-2">
+            <tbody>
+              ${carrerasPerfil
+                .map(
+                  (c, rowIndex) => `
+                    <tr class="rounded-3xl ${rowIndex % 2 === 0 ? 'bg-transparent dark:bg-transparent' : 'bg-white dark:bg-[#2D3038]'}">
+                      <td class="py-3 px-3 sm:px-4 align-top w-[60%]">
+                        <a href="${c.enlace}" target="_blank" rel="noopener noreferrer" class="block font-semibold text-slate-900 dark:text-white hover:text-blue-700 dark:hover:text-blue-300 break-words">
+                          ${c.nombre}
+                        </a>
+                      </td>
+                      <td class="py-3 px-3 sm:px-4 align-top text-right text-slate-600 dark:text-slate-400 w-[40%] break-words">
+                        ${c.campus}
+                      </td>
+                    </tr>
+                  `,
+                )
+                .join("")}
+            </tbody>
+          </table>
+        </div>
+      `
+      : `<p class="text-gray-600 dark:text-gray-400 text-sm">No hay carreras disponibles para este perfil.</p>`;
 
     html += `
     <div id="accordion-card-${index}" class="mb-2">
@@ -506,17 +537,15 @@ function mostrarPerfiles(resultados) {
         </button>
       </h2>
       <div id="accordion-card-body-${index}" class="hidden overflow-hidden transition-all duration-300 ease-in-out max-h-0" aria-labelledby="accordion-card-heading-${index}">
-        <div class="p-3 sm:p-4">
-          <p class="mb-2 text-gray-700 dark:text-gray-300 font-medium text-xs sm:text-sm">Carreras recomendadas:</p>
-          <ul class="space-y-1 text-xs sm:text-sm">
-            ${careersList}
-          </ul>
+        <div class="p-3 sm:p-4 space-y-3">
+          <p class="mb-1 text-gray-700 dark:text-gray-300 font-medium text-xs sm:text-sm">Carreras recomendadas:</p>
+          ${tablaCarreras}
         </div>
       </div>
     </div>`;
   });
 
-  // Agregar evento para togglear acordeones con animación
+  //* Agregar evento para togglear acordeones con animación
   setTimeout(() => {
     document.querySelectorAll("[data-accordion-target]").forEach((button) => {
       button.addEventListener("click", () => {
@@ -525,12 +554,12 @@ function mostrarPerfiles(resultados) {
         );
         const isExpanded = button.getAttribute("aria-expanded") === "true";
 
-        // Toggle aria-expanded
+        // Alterna aria-expanded
         button.setAttribute("aria-expanded", !isExpanded);
 
         // Animar el contenido del acordeón
         if (!isExpanded) {
-          // Abrir - anim max-height
+          // Abrir - animar max-height
           target.classList.remove("hidden");
           target.style.maxHeight = target.scrollHeight + "px";
           // Rotar icono si existe
@@ -555,55 +584,55 @@ function mostrarPerfiles(resultados) {
     });
   }, 100);
 
-  textDiv.innerHTML = html;
-  contenedor.appendChild(textDiv);
+  contenedorTexto.innerHTML = html;
+  contenedor.appendChild(contenedorTexto);
 
-  // Buttons
-  const buttonContainer = document.createElement("div");
-  buttonContainer.className = "flex flex-col sm:flex-row justify-center gap-3 sm:gap-2 md:gap-4 mt-4 sm:mt-6 w-full";
+  //* Contenedor de botones
+  const contenedorBotones = document.createElement("div");
+  contenedorBotones.className = "flex flex-col sm:flex-row justify-center gap-3 sm:gap-2 md:gap-4 mt-4 sm:mt-6 w-full";
 
-  const downloadBtn = document.createElement("button");
-  downloadBtn.innerHTML = `
+  const botonDescargar = document.createElement("button");
+  botonDescargar.innerHTML = `
   <svg class="w-3 h-3 sm:w-4 sm:h-4 me-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" fill="currentColor">
     <path d="M352 96C352 78.3 337.7 64 320 64C302.3 64 288 78.3 288 96L288 306.7L246.6 265.3C234.1 252.8 213.8 252.8 201.3 265.3C188.8 277.8 188.8 298.1 201.3 310.6L297.3 406.6C309.8 419.1 330.1 419.1 342.6 406.6L438.6 310.6C451.1 298.1 451.1 277.8 438.6 265.3C426.1 252.8 405.8 252.8 393.3 265.3L352 306.7L352 96zM160 384C124.7 384 96 412.7 96 448L96 480C96 515.3 124.7 544 160 544L480 544C515.3 544 544 515.3 544 480L544 448C544 412.7 515.3 384 480 384L433.1 384L376.5 440.6C345.3 471.8 294.6 471.8 263.4 440.6L206.9 384L160 384zM464 440C477.3 440 488 450.7 488 464C488 477.3 477.3 488 464 488C450.7 488 440 477.3 440 464C440 450.7 450.7 440 464 440z"/>
   </svg>
   <span class="text-xs sm:text-sm">Descargar PDF</span>
 `;
-  downloadBtn.className =
+  botonDescargar.className =
     "inline-flex items-center justify-center bg-blue-800 dark:bg-blue-400 text-white dark:text-black px-3 sm:px-4 py-2 sm:py-2.5 rounded-full hover:bg-blue-900 dark:hover:bg-blue-300 transition w-full sm:w-auto";
-  downloadBtn.onclick = () => downloadPDF(resultados, respuestas);
-  buttonContainer.appendChild(downloadBtn);
+  botonDescargar.onclick = () => descargarPDF(resultados, respuestas);
+  contenedorBotones.appendChild(botonDescargar);
 
-  const saveBtn = document.createElement("button");
-  saveBtn.innerHTML = `
+  const botonGuardar = document.createElement("button");
+  botonGuardar.innerHTML = `
   <svg class="w-3 h-3 sm:w-4 sm:h-4 me-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" fill="currentColor">
     <path d="M160 96C124.7 96 96 124.7 96 160L96 480C96 515.3 124.7 544 160 544L480 544C515.3 544 544 515.3 544 480L544 237.3C544 220.3 537.3 204 525.3 192L448 114.7C436 102.7 419.7 96 402.7 96L160 96zM192 192C192 174.3 206.3 160 224 160L384 160C401.7 160 416 174.3 416 192L416 256C416 273.7 401.7 288 384 288L224 288C206.3 288 192 273.7 192 256L192 192zM320 352C355.3 352 384 380.7 384 416C384 451.3 355.3 480 320 480C284.7 480 256 451.3 256 416C256 380.7 284.7 352 320 352z"/>
   </svg>
   <span class="text-xs sm:text-sm">Guardar resultado</span>
 `;
-  saveBtn.className =
+  botonGuardar.className =
     "inline-flex items-center justify-center bg-green-800 dark:bg-green-500 text-white px-3 sm:px-4 py-2 sm:py-2.5 rounded-full hover:bg-green-900 dark:hover:bg-green-600 transition w-full sm:w-auto";
-  saveBtn.onclick = () => saveResult(resultados);
-  buttonContainer.appendChild(saveBtn);
+  botonGuardar.onclick = () => guardarResultado(resultados);
+  contenedorBotones.appendChild(botonGuardar);
 
-  const restartBtn = document.createElement("button");
-  restartBtn.innerHTML = `
+  const botonReiniciar = document.createElement("button");
+  botonReiniciar.innerHTML = `
     <svg class="w-3 h-3 sm:w-4 sm:h-4 me-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" fill="currentColor">
     <path d="M320 128C263.2 128 212.1 152.7 176.9 192L224 192C241.7 192 256 206.3 256 224C256 241.7 241.7 256 224 256L96 256C78.3 256 64 241.7 64 224L64 96C64 78.3 78.3 64 96 64C113.7 64 128 78.3 128 96L128 150.7C174.9 97.6 243.5 64 320 64C461.4 64 576 178.6 576 320C576 461.4 461.4 576 320 576C233 576 156.1 532.6 109.9 466.3C99.8 451.8 103.3 431.9 117.8 421.7C132.3 411.5 152.2 415.1 162.4 429.6C197.2 479.4 254.8 511.9 320 511.9C426 511.9 512 425.9 512 319.9C512 213.9 426 128 320 128z"/>
   </svg>
   <span class="text-xs sm:text-sm">Reiniciar</span>`;
-  restartBtn.className =
+  botonReiniciar.className =
     "inline-flex items-center justify-center bg-gray-800 dark:bg-gray-600 text-white px-3 sm:px-4 py-2 sm:py-2.5 rounded-full hover:bg-gray-900 dark:hover:bg-gray-700 transition w-full sm:w-auto";
-  restartBtn.onclick = () => location.reload();
-  buttonContainer.appendChild(restartBtn);
+  botonReiniciar.onclick = () => location.reload();
+  contenedorBotones.appendChild(botonReiniciar);
 
-  contenedor.appendChild(buttonContainer);
+  contenedor.appendChild(contenedorBotones);
 
   resultadosDiv.appendChild(contenedor);
 }
 
-//* Funcion para descargar PDF
-function downloadPDF(scores, respuestas) {
+//! Descargar el resultado en PDF
+function descargarPDF(puntajes, respuestas) {
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF();
   const pageWidth = doc.internal.pageSize.getWidth();
@@ -611,7 +640,7 @@ function downloadPDF(scores, respuestas) {
   const margin = 20;
   let yPos = margin;
 
-  // Colores
+  //* Colores base
   const primaryColor = [35, 56, 118]; // blue-900
   const textColor = [50, 50, 50];
   const lightGray = [240, 240, 240];
@@ -633,7 +662,7 @@ function downloadPDF(scores, respuestas) {
     return false;
   };
 
-  // === ENCABEZADO ===
+  //* Encabezado del PDF
   doc.setFillColor(...primaryColor);
   doc.rect(0, 0, pageWidth, 35, "F");
 
@@ -657,33 +686,29 @@ function downloadPDF(scores, respuestas) {
 
   yPos = 45;
 
-  // === GRÁFICO RADAR ===
+  //* Sección de gráfico radar
   doc.setTextColor(...textColor);
   doc.setFontSize(14);
   doc.setFont("helvetica", "bold");
   doc.text("Perfil RIASEC", margin, yPos);
 
-  // Obtener el canvas del gráfico y convertir a imagen
+  //* Obtener el canvas del gráfico y convertirlo a imagen
 
-  const chartCanvas = document.getElementById("chart");
+  const canvasGrafico = document.getElementById("chart");
 
-  if (chartCanvas && perfilChart) {
-    // Guardar estado actual
-    const originalOptions = JSON.parse(JSON.stringify(perfilChart.options));
-    const originalDataset = JSON.parse(
-      JSON.stringify(perfilChart.data.datasets),
+  if (canvasGrafico && graficoPerfil) {
+    const opcionesOriginales = JSON.parse(JSON.stringify(graficoPerfil.options));
+    const datosOriginales = JSON.parse(
+      JSON.stringify(graficoPerfil.data.datasets),
     );
 
-    // Forzar modo claro
-    aplicarModoClaroChart();
+    aplicarModoClaroGrafico();
 
-    // Capturar imagen
-    const chartImg = chartCanvas.toDataURL("image/png", 1.0);
+    const chartImg = canvasGrafico.toDataURL("image/png", 1.0);
 
-    // Restaurar estado original
-    perfilChart.options = originalOptions;
-    perfilChart.data.datasets = originalDataset;
-    perfilChart.update("none");
+    graficoPerfil.options = opcionesOriginales;
+    graficoPerfil.data.datasets = datosOriginales;
+    graficoPerfil.update("none");
 
     const imgSize = 80;
     const imgX = (pageWidth - imgSize) / 2;
@@ -692,7 +717,7 @@ function downloadPDF(scores, respuestas) {
     yPos += imgSize + 5;
   }
 
-  // === TABLA DE RESULTADOS ===
+  //* Tabla de resultados
   checkNewPage(60);
   drawLine(yPos);
   yPos += 10;
@@ -703,7 +728,7 @@ function downloadPDF(scores, respuestas) {
   yPos += 5;
 
   // Ordenar resultados de mayor a menor
-  const sortedScores = Object.entries(scores).sort((a, b) => b[1] - a[1]);
+  const puntajesOrdenados = Object.entries(puntajes).sort((a, b) => b[1] - a[1]);
 
   // Encabezado de tabla
   doc.setFillColor(...lightGray);
@@ -718,7 +743,7 @@ function downloadPDF(scores, respuestas) {
 
   // Filas de datos
   doc.setFont("helvetica", "normal");
-  sortedScores.forEach(([area, score], index) => {
+  puntajesOrdenados.forEach(([area, puntaje], index) => {
     // Alternar colores de fondo
     if (index % 2 === 0) {
       doc.setFillColor(250, 250, 250);
@@ -726,15 +751,15 @@ function downloadPDF(scores, respuestas) {
     }
 
     doc.text(area, margin + 5, yPos + 4);
-    doc.text(score.toString(), pageWidth - margin - 20, yPos + 4);
+    doc.text(puntaje.toString(), pageWidth - margin - 20, yPos + 4);
     yPos += 8;
   });
 
   yPos += 5;
 
-  // === RESPUESTAS DE CADA PREGUNTA ===
+  //* Respuestas de cada pregunta
 
-  // escala de resultados
+  // Escala de resultados
   const escala = {
     "-2": "Totalmente en desacuerdo",
     "-1": "En desacuerdo",
@@ -775,14 +800,14 @@ function downloadPDF(scores, respuestas) {
     doc.text(`${index + 1}. ${texto}`, x, yActual);
   });
 
-  // === TOP 3 PERFILES ===
+  //* Top 3 perfiles
   checkNewPage(80);
   doc.setFontSize(14);
   doc.setFont("helvetica", "bold");
   doc.text("Top 3 Perfiles Recomendados", margin, yPos);
   yPos += 5;
 
-  sortedScores.slice(0, 3).forEach(([perfil, score], index) => {
+  puntajesOrdenados.slice(0, 3).forEach(([perfil, puntaje], index) => {
     // Verificar espacio disponible
     checkNewPage(40);
 
@@ -806,12 +831,12 @@ function downloadPDF(scores, respuestas) {
     // Puntuación
     doc.setFontSize(10);
     doc.setFont("helvetica", "normal");
-    doc.text(`(${score} pts)`, xBase + perfilWidth + 3, yBase - 0.5);
+    doc.text(`(${puntaje} pts)`, xBase + perfilWidth + 3, yBase - 0.5);
 
     yPos += 8;
 
-    // Descripcion del perfil
-    const descripcion = RIASEC[perfil] || "Descripción no disponible";
+    // Descripción del perfil
+    const descripcion = perfilesRiasc[perfil] || "Descripción no disponible";
     doc.setFontSize(9);
     doc.setTextColor(...textColor);
     const descripcionLines = doc.splitTextToSize(
@@ -828,27 +853,81 @@ function downloadPDF(scores, respuestas) {
     drawLine(yPos);
     yPos += 4;
 
-    // carera recomendada subtitulo
+    // Subtítulo de carreras recomendadas
     doc.setFontSize(10);
     doc.setFont("helvetica", "bold");
     doc.text("Carreras recomendadas:", xBase, yPos + 3);
     yPos += 6;
 
-    // Carreras recomendadas
-    const perfilCareers = careers[perfil] || [];
-    doc.setFontSize(9);
-    doc.setFont("helvetica", "normal");
-    doc.setTextColor(...textColor);
-    perfilCareers.forEach((carrera) => {
+    // Tabla de carreras recomendadas
+    const perfilClave = perfil.toLowerCase();
+    const carrerasPerfil = carrerasPorPerfil[perfilClave] || [];
+    const posTabla = margin + 8;
+    const anchuraTabla = pageWidth - margin * 2 - 16;
+    const alturaFila = 8;
+    const anchoColIzquierda = Math.round(anchuraTabla * 0.6);
+    const anchoColDerecha = anchuraTabla - anchoColIzquierda;
+
+    if (carrerasPerfil.length > 0) {
+      checkNewPage(alturaFila * (carrerasPerfil.length + 1) + 10);
+
+      // Encabezado de tabla
+      doc.setFillColor(...lightGray);
+      doc.rect(posTabla, yPos, anchuraTabla, alturaFila, "F");
+      doc.setFontSize(9);
+      doc.setFont("helvetica", "bold");
+      doc.setTextColor(...textColor);
+      doc.text("Carrera", posTabla + 2, yPos + 5);
+      doc.text("Campus", posTabla + anchuraTabla - 2, yPos + 5, { align: "right" });
+      yPos += alturaFila;
+      doc.setFont("helvetica", "normal");
+
+      carrerasPerfil.forEach((carrera, rowIndex) => {
+        const nombre = carrera?.nombre || carrera || "";
+        const campus = carrera?.campus || "";
+
+        const maxAnchoNombre = anchoColIzquierda - 4;
+        const lineasNombre = doc.splitTextToSize(nombre, maxAnchoNombre);
+        const cantidadLineas = Math.max(1, lineasNombre.length);
+        const alturaLinea = 5;
+        const alturaNecesaria = Math.max(alturaFila, cantidadLineas * alturaLinea + 2 * 2);
+
+        checkNewPage(alturaNecesaria + 4);
+        if (rowIndex % 2 === 0) {
+          doc.setFillColor(250, 250, 250);
+          doc.rect(posTabla, yPos, anchuraTabla, alturaNecesaria, "F");
+        }
+
+        doc.setTextColor(...textColor);
+        lineasNombre.forEach((linea, iLinea) => {
+          const yLinea = yPos + 4 + iLinea * alturaLinea;
+          doc.text(linea, posTabla + 2, yLinea);
+        });
+
+        const yCampus = yPos + Math.round(alturaNecesaria / 2) + 1;
+        doc.text(campus, posTabla + anchuraTabla - 2, yCampus, { align: "right" });
+
+        yPos += alturaNecesaria;
+      });
+    } else {
       checkNewPage(10);
-      doc.text(`• ${carrera}`, margin + 12, yPos + 3);
-      yPos += 6;
-    });
+      doc.setFontSize(9);
+      doc.setFont("helvetica", "normal");
+      doc.setTextColor(...textColor);
+      doc.text("No hay carreras disponibles para este perfil.", posTabla, yPos + 3);
+      yPos += alturaFila;
+    }
 
     yPos += 5;
+
+    // Salto de página para mostrar cada perfil en una página separada
+    if (index < 2) {
+      doc.addPage();
+      yPos = margin;
+    }
   });
 
-  // === PIE DE PÁGINA ===
+  //! Pie de página del PDF
   yPos = pageHeight - 14;
   drawLine(yPos);
   yPos = pageHeight - 10;
@@ -867,13 +946,13 @@ function downloadPDF(scores, respuestas) {
     },
   );
 
-  // Guardar el PDF
+  //! Guardar el PDF
   doc.save("resultado-vocacional.pdf");
 }
 
-// Function to save result
-function saveResult(scores) {
-  localStorage.setItem("resultadoVocacional", JSON.stringify(scores));
+//! Guardar resultado en localStorage
+function guardarResultado(puntajes) {
+  localStorage.setItem("resultadoVocacional", JSON.stringify(puntajes));
   alert("Resultado guardado");
 }
 
