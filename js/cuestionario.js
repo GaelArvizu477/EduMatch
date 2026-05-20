@@ -500,7 +500,7 @@ function mostrarPerfiles(resultados) {
     const tablaCarreras = carrerasPerfil.length
       ? `
         <div class="overflow-hidden rounded-lg">
-          <div class="hidden sm:grid grid-cols-[1.5fr_0.8fr] gap-3 px-3 py-3 text-[0.68rem] sm:text-xs uppercase tracking-[0.12em] text-gray-500 dark:text-gray-400 bg-white dark:dark:bg-[#2D3038]">
+          <div class="grid grid-cols-[1.5fr_0.8fr] gap-3 px-3 py-3 text-[0.68rem] sm:text-xs uppercase tracking-[0.12em] text-gray-500 dark:text-gray-400 bg-white dark:dark:bg-[#2D3038]">
             <span>Nombre de la carrera</span>
             <span class="text-right">Campus</span>
           </div>
